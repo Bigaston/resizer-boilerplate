@@ -19,7 +19,7 @@ module.exports.session = {
   *                                                                          *
   ***************************************************************************/
   secret: '80936866c73b9f0e3560f9fa1908f5cb',
-  adapter: "@sailshq/connect-redis",
+  adapter: '@sailshq/connect-redis',
   url: process.env.REDIS_URL,
 
 

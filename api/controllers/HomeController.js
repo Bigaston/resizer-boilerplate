@@ -6,7 +6,7 @@
  */
 
 module.exports = {
-  home: async function(req, res) {
+  home: async function (req, res) {
     res.view('home/home');
   }
 };

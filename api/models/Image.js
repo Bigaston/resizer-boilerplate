@@ -6,7 +6,7 @@
  */
 
 module.exports = {
-  migrate: "safe",
+  migrate: 'safe',
 
   attributes: {
 
@@ -18,11 +18,11 @@ module.exports = {
       required: true
     },
     path: {
-      type: "string",
+      type: 'string',
       required: true
     },
     uploader: {
-      model: "user"
+      model: 'user'
     },
 
 

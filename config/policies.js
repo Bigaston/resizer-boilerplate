@@ -10,7 +10,7 @@
 
 module.exports.policies = {
   UserController: {
-    "*": true
+    '*': true
   },
 
   '*': 'isLoggedIn',
