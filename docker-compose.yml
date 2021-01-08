@@ -2,14 +2,12 @@ version: "3"
 services:
   web:
     build: .
+    env_file:
+      - .env
     environment:
       - NODE_ENV=development
       - MYSQL_ADDR=mysql://sails:sails@database/sails_mysql
       - REDIS_URL=redis://redis:6379
-      - S3_KEY=AKIA42L6K2HGDIY2ESVZ
-      - S3_SECRET=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
-      - S3_BUCKET=resizer-tp
-      - S3_FOLDER=bigaston
     ports:
       - 1337:1337
     command: npm run dev
