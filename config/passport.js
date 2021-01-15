@@ -21,12 +21,13 @@ passport.use(new LocalStrategy({
     if (err) { return cb(err); }
     if (!user) { return cb(null, false, { message: 'Username not found' }); }
     bcrypt.compare(password, user.password, (err, res) => {
-      if (!err) { return cb(null, false, { message: 'Error' }); }
+      if (err) { return cb(null, false, { message: 'Error' }); }
       if (!res) { return cb(null, false, { message: 'Invalid Password' }); }
       let userDetails = {
         username: user.username,
         id: user.id
-      }; return cb(null, userDetails, { message: 'Login Succesful' });
+      };
+      return cb(null, userDetails, { message: 'Login Succesful' });
     });
   });
 }));

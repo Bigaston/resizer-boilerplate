@@ -5,6 +5,8 @@
  * @help        :: See https://sailsjs.com/docs/concepts/actions
  */
 
+const imageQueue = require('../../operation/Resize').imageQueue;
+
 module.exports = {
   create: async function (req, res) {
     if (req.body.name === undefined || req.body.name === '') {
@@ -35,7 +37,14 @@ module.exports = {
         path: uploadedFiles[0].fd,
         uploader: req.user.id
       }).fetch().then(img => {
-        res.ok(img.id);
+        res.status(202).send(img.id);
+
+        Operation.create({
+          status: 'running',
+          imageId: img.id
+        }).then(ope => {
+          imageQueue.add({ id: ope.id, img: uploadedFiles[0].fd });
+        });
       });
     });
   },

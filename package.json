@@ -9,6 +9,7 @@
     "@sailshq/lodash": "^3.10.3",
     "@sailshq/socket.io-redis": "^5.2.0",
     "bcrypt": "5.x",
+    "bull": "^3.20.0",
     "grunt": "1.0.4",
     "knex": "^0.21.12",
     "passport": "^0.4.1",
