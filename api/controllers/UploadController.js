@@ -23,7 +23,7 @@ module.exports = {
       saveAs: (__newFileStream, next) => {
         return next(undefined, `/${process.env.S3_FOLDER}/${Date.now()}-${__newFileStream.filename}`);
       }
-    }, function whenDone(err, uploadedFiles) {
+    }, async function whenDone(err, uploadedFiles) {
       if (err) {
         res.serverError(err);
       }
@@ -32,20 +32,21 @@ module.exports = {
         res.badRequest('No file was uploaded');
       }
 
-      Image.create({
+      let img = await Image.create({
         name: req.body.name,
         path: uploadedFiles[0].fd,
         uploader: req.user.id
-      }).fetch().then(img => {
-        res.status(202).send(img.id);
+      }).fetch();
 
-        Operation.create({
-          status: 'running',
-          imageId: img.id
-        }).then(ope => {
-          imageQueue.add({ id: ope.id, img: uploadedFiles[0].fd });
-        });
-      });
+      res.statusCode = 202;
+      res.send('' + img.id);
+
+      let ope = await Operation.create({
+        status: 'running',
+        imageId: img.id
+      }).fetch();
+
+      imageQueue.add({ id: ope.id, img: uploadedFiles[0].fd });
     });
   },
   show: async function (req, res) {

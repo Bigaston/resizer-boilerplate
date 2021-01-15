@@ -4,6 +4,8 @@ exports.up = function (knex) {
     table.increments();
     table.string('status').notNullable();
     table.integer('imageId').notNullable();
+    table.bigInteger('createdAt').notNullable();
+    table.bigInteger('updatedAt').notNullable();
   });
 };
 

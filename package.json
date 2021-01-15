@@ -8,6 +8,7 @@
     "@sailshq/connect-redis": "^3.2.1",
     "@sailshq/lodash": "^3.10.3",
     "@sailshq/socket.io-redis": "^5.2.0",
+    "aws-sdk": "^2.828.0",
     "bcrypt": "5.x",
     "bull": "^3.20.0",
     "grunt": "1.0.4",
@@ -19,6 +20,7 @@
     "sails-hook-orm": "^2.1.1",
     "sails-hook-sockets": "^2.0.0",
     "sails-mysql": "^1.0.1",
+    "sharp": "^0.27.0",
     "skipper-s3": "^0.6.0"
   },
   "devDependencies": {
