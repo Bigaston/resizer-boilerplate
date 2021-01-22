@@ -46,7 +46,7 @@ module.exports = {
         imageId: img.id
       }).fetch();
 
-      imageQueue.add({ id: ope.id, img: uploadedFiles[0].fd });
+      imageQueue.add({ id: ope.id, img: uploadedFiles[0].fd, imgId: img.id });
     });
   },
   show: async function (req, res) {

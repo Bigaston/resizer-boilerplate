@@ -27,20 +27,47 @@ imageQueue.process((job, done) => {
     .on('end', () => {
       let buffer = Buffer.concat(buffArray);
 
-      let img320 = resize(buffer, [320, 240]);
-      let img640 = resize(buffer, [640, 480]);
-      let img1024 = resize(buffer, [1024, 960]);
-      let img2048 = resize(buffer, [2048, 1920]);
-
-      Promise.all([
-        upload(img320, 320),
-        upload(img640, 640),
-        upload(img1024, 1024),
-        upload(img2048, 2048)
-      ]).then(() => {
-        done();
+      resize(buffer, [320, 240]).then((img320) => {
+        resize(buffer, [640, 480]).then((img640) => {
+          resize(buffer, [1024, 960]).then((img1024) => {
+            resize(buffer, [2048, 1920]).then((img2048) => {
+              sails.models.image.find({ id: job.data.imgId }).then(img => {
+                img=img[0];
+                upload(img320, 320, img).then(() => {
+                  upload(img640, 640, img).then(() => {
+                    upload(img1024, 1024, img).then(() => {
+                      upload(img2048, 2048, img).then(() => {
+                        done();
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
       });
     });
+
+  function upload(file, size, img) {
+    let regex = new RegExp(`/${process.env.S3_FOLDER}/`);
+    console.log(img.path.replace(regex, `/${process.env.S3_FOLDER}/${size}-`));
+    return new Promise((resolve, reject) => {
+      const params = {
+        Bucket: process.env.S3_BUCKET,
+        Key: img.path.replace(regex, `/${process.env.S3_FOLDER}/${size}-`), // File name you want to save as in S3
+        Body: file
+      };
+
+      // Uploading files to the bucket
+      s3.upload(params, (err,) => {
+        if (err) {
+          reject(err);
+        }
+        resolve();
+      });
+    });
+  }
 });
 
 function resize(buffer, size) {
@@ -48,22 +75,4 @@ function resize(buffer, size) {
     .resize(size[0], size[1])
     .jpeg()
     .toBuffer();
-}
-
-function upload(file, size) {
-  return new Promise((resolve, reject) => {
-    const params = {
-      Bucket: process.env.S3_BUCKET,
-      Key: `/${process.env.S3_FOLDER}/${size}-${Date.now()}-${__newFileStream.filename}`, // File name you want to save as in S3
-      Body: file
-    };
-
-    // Uploading files to the bucket
-    s3.upload(params, (err,) => {
-      if (err) {
-        reject(err);
-      }
-      resolve();
-    });
-  });
 }
